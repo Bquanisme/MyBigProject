@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Home input */
+.image-background-home{
+    background-image: url('../assets/Banner.jpg');
+    background-size: cover;
+    height: 550px;
+}
+
+.size{
+    color: white;
+}
+
+.padding-size{
+    padding: 80px;
+    padding-top: 150px;
+    padding-left: 100px;
+}
+
+.top-size{
+    padding-bottom: 150px;
+    margin-top: 0px;
+}
+
+.input-change{
+    padding-left: 10px;
+}
+
+.input-change input{
+    font-size: 20px;
+}
+
+.input-change-size{
+    width: 100%;
+    height: 60px;
+    border-radius: 5px;
+    border: solid 1px white;
+}
+
+
+
+/* Home discover */
+.background-discover{
+    background-color: rgb(223, 213, 213);
+}
+
+.center-text{
+    text-align: center;
+    padding-top: 40px;
+}
+
+.center-text h1{
+    color: rgb(12, 64, 161);
+}
+
+.center-text p{
+    color: rgb(99, 97, 97);
+}
+
+.img-change{
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 50px;
+}
+
+.img-change-size{
+    width: 330px;
+    border-radius: 5px;
+    padding: 7px;
+    border-radius: 10px;
+}
+
+.img-change-size-2{
+    width: 350px;
+    height: 250px;
+    border-radius: 5px;
+    padding: 7px;
+    border-radius: 10px;
+}
+
+.img-change-flex{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+
+/* HomeTicketUI */
+.margin-home{
+    margin: 80px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    box-shadow: 2px 5px 7px rgb(141, 135, 135);
+}
+
+.margin{
+    margin-top: 0;
+    margin-bottom: 20px;
+    box-shadow: 2px 5px 7px rgb(141, 135, 135);
+    width: 100%;
+    margin-right: 30px;
+}
+
+.background-button{
+    background-color: red;
+}
+
+
+
+/* Home StandardRoom */
+.background-img-for-standard{
+    background-image: url('../assets/roomBanner.jpg');
+    padding: 30px;
+}
+
+.align{
+    text-align: center;
+    color: white;
+}
+
+.flex-size{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+/* Room Input */
+.image-background-room{
+    background-image: url('../assets/room9.jpg');
+    background-size: cover;
+    height: 550px;
+}
+
+.display{
+    display: flex;
+    justify-content: left;
+    background-color: rgb(238, 235, 235);
+}
+
+.image-background-room-detail{
+    background-image: url('../assets/room10.jpg');
+    background-size: cover;
+    height: 250px;
+    position: 'relative';
+    width: '100%';
+    background-position: 'center';
+    display: 'flex';
+    align-items: 'flex-end';
+    justify-content: 'center';
+}
+
+
+
+/* Tour Input */
+.image-background-tour{
+    background-image: url('../assets/img5.jpg');
+    background-size: cover;
+    height: 550px;
+}
+
+
+
+/* News Input */
+.image-background-news{
+    background-image: url('../assets/night.jpg');
+    background-size: cover;
+    height: 550px;
+}
