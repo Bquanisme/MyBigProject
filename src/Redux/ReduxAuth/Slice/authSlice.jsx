@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginAPI } from "./authAPI";
+import { loginAPI, registerAPI } from "./authAPI";
 
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
@@ -10,6 +10,17 @@ export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI
   } 
   catch (err) {
     return thunkAPI.rejectWithValue(err.response?.data?.message || 'Login failed');
+  }
+});
+
+export const register = createAsyncThunk('register', async (userInfo, thunkAPI) => {
+  try {
+    const res = await registerAPI(userInfo);
+    localStorage.setItem('token', res.data.token);
+    return res.data
+  } 
+  catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.message || 'register failed');
   }
 });
 
@@ -30,6 +41,20 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+        .addCase(register.pending, (state) => {
+            state.status = 'loading'
+        })
+        .addCase(register.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.user = action.payload,
+            state.token = action.payload
+        })
+        .addCase(register.rejected, (state, action) => {
+            state.status = 'falled'
+            state.error = action.payload;
+        })
+
+
         .addCase(login.fulfilled, (state, action) => {
             state.user = action.payload,
             state.token = action.payload

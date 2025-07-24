@@ -1,11 +1,226 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { register } from '../../Redux/ReduxAuth/Slice/authSlice';
+import { Box, Button, Divider, Typography } from '@mui/material'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import BgImage from '../../assets/room1.jpg'; 
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const Register = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+      const [name, setName] = useState('')
+      const [email, setEmail] = useState('')
+      const [password, setPassword] = useState('')
+      const [address, setAddress] = useState('')
+      const [showPassword, setShowPassword] = useState(false)
+  
+      const auth = useSelector((state) => state.auth);
+  
+      const navigate = useNavigate();
+      const dispatch = useDispatch();
+  
+      const handleShowPassword = () => {
+          setShowPassword(prev => !prev)
+      }
+
+      const handleSubmit = () => {
+        dispatch(register({name, email, password, address}));
+      }; 
+  
+      return (
+          <Box sx={{
+              backgroundImage: `url(${BgImage})`, 
+              width: '100%',
+              height: '120vh',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              display: 'flex',
+              justifyContent: 'center'
+          }}
+          >
+            
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                  <Card 
+                  sx={{ 
+                      width: 650, 
+                      height: 800, 
+                  }}
+                  >
+                      <CardContent dividers>
+                      <Typography gutterBottom variant="h4" component="div" sx={{margin: 2, fontWeight: '600'}}>
+                          Đăng Ký Tài Khoản
+                      </Typography>
+                      <Divider sx={{ margin: 3, borderColor: 'lightgray' }} />
+                      <Typography variant="body2" sx={{ color: 'text.secondary', margin: 2, marginTop: 4 }}>
+                          <form >
+                              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                  <Typography sx={{color: 'red'}}>*</Typography>
+                                  <Typography sx={{color: 'black'}}>Họ và Tên</Typography>
+                              </Box>
+                              <Box>
+                                <input 
+                                  placeholder="Name" 
+                                  name="name" 
+                                  type="text" 
+                                  value={name} 
+                                  onChange={(e) => setName(e.target.value)}
+                                  style={{
+                                  width: '100%', 
+                                  margin: 3, 
+                                  marginTop: 15,
+                                  height: '40px',
+                                  borderRadius: '7px',
+                                  borderStyle: 'solid',
+                                  borderColor: 'lightgrey',
+                                  paddingLeft: 12
+                                  }}
+                                />
+                              </Box><br />
+
+                              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                  <Typography sx={{color: 'red'}}>*</Typography>
+                                  <Typography sx={{color: 'black'}}>Email</Typography>
+                              </Box>
+                              <Box>
+                                <input 
+                                  placeholder="Email" 
+                                  name="email" 
+                                  type="email" 
+                                  value={email} 
+                                  onChange={(e) => setEmail(e.target.value)}
+                                  style={{
+                                  width: '100%', 
+                                  margin: 3, 
+                                  marginTop: 15,
+                                  height: '40px',
+                                  borderRadius: '7px',
+                                  borderStyle: 'solid',
+                                  borderColor: 'lightgrey',
+                                  paddingLeft: 12
+                                  }}
+                                />
+                              </Box><br />
+  
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography sx={{ color: 'red' }}>*</Typography>
+                              <Typography sx={{ color: 'black' }}>Mật khẩu</Typography>
+                              </Box>
+
+                              <Box sx={{ position: 'relative' }}>
+                                <input 
+                                  placeholder="Password" 
+                                  name="password" 
+                                  type={showPassword ? 'text' : 'password'}
+                                  value={password} 
+                                  onChange={(e) => setPassword(e.target.value)}
+                                  style={{
+                                  width: '100%', 
+                                  margin: 3, 
+                                  marginTop: 15,
+                                  height: '40px',
+                                  borderRadius: '7px',
+                                  borderStyle: 'solid',
+                                  borderColor: 'lightgrey',
+                                  paddingLeft: 12,
+                                  paddingRight: 45 // chừa chỗ cho icon
+                                  }}
+                                />
+  
+                                <Box
+                                  sx={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  right: 7,
+                                  transform: 'translateY(-30%)',
+                                  borderRadius: '7px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: 30,
+                                  height: 30,
+                                  backgroundColor: 'white',
+                                  }}
+                                >
+                                <Button onClick={handleShowPassword} sx={{ minWidth: 'auto', padding: 0 }}>
+                                {showPassword ? (
+                                    <VisibilityIcon sx={{ height: 23, color: 'black' }} />
+                                ) : (
+                                    <VisibilityOffIcon sx={{ height: 23, color: 'black' }} />
+                                )}
+                                </Button>
+                                </Box>
+                              </Box>
+                              <br />
+
+                              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                  <Typography sx={{color: 'red'}}>*</Typography>
+                                  <Typography sx={{color: 'black'}}>Địa chỉ</Typography>
+                              </Box>
+                              <Box>
+                                <input 
+                                  placeholder="Address" 
+                                  name="address" 
+                                  type="text" 
+                                  value={address} 
+                                  onChange={(e) => setAddress(e.target.value)}
+                                  style={{
+                                  width: '100%', 
+                                  margin: 3, 
+                                  marginTop: 15,
+                                  height: '40px',
+                                  borderRadius: '7px',
+                                  borderStyle: 'solid',
+                                  borderColor: 'lightgrey',
+                                  paddingLeft: 12
+                                  }}
+                                />
+                              </Box><br />
+
+                              <Box>
+                                  <Button 
+                                      onClick={handleSubmit}
+                                      variant="contained"
+                                  >
+                                      Đăng ký
+                                  </Button>
+                                  {auth.status === 'loading' && <p>Đang xử lý...</p>}
+                                  {auth.error && <p style={{ color: 'red' }}>{auth.error}</p>}
+                              </Box>
+                              <Divider sx={{ margin: 3, borderColor: 'lightgray' }} >
+                              <Typography style={{ 
+                                  textAlign: 'center',
+                                  color: 'black',
+                                  fontWeight: '600'
+                              }}
+                              >
+                                  Or
+                              </Typography>
+                              </Divider>
+                              <Typography style={{ 
+                                  color: 'black',
+                                  margin: 3
+                              }}
+                              >
+                                  <Typography sx={{display: 'flex', gap: 1 }}>
+                                      Đã có tài khoản ?
+                                      <Link to="/Login" style={{ textDecoration: 'none'}}> 
+                                          Đăng Nhập ngay
+                                      </Link>                         
+                                  </Typography> 
+                              </Typography>
+                              <Typography sx={{marginTop: '20px'}}>
+                                  <Link to="/" style={{ textDecoration: 'none', margin: 3}}>Quay về trang chủ</Link>
+                              </Typography>
+                          </form>
+                      </Typography>
+                      </CardContent>
+                  </Card>
+            </Box>
+          </Box>
+      )
 }
 
 export default Register

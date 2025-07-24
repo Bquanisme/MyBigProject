@@ -5,3 +5,8 @@ export const loginAPI = (credentials) => {
   return axiosClient.post('/auth/login', credentials)
 }
 
+export const registerAPI = (userInfo) => {
+  return axiosClient.post('/register', userInfo)
+}
+
+
