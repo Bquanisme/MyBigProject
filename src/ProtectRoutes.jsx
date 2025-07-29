@@ -4,7 +4,14 @@ import { Navigate } from 'react-router-dom'
 
 const ProtectRoutes = ({children}) => {
     const token = useSelector((state) => state.auth.token);
-    return token ? children : <Navigate to="/" />;
+    if(!token){
+       return (<Navigate to="/"></Navigate>)
+    }
+    console.log('token', token)
+    //return token ? children : <Navigate to="/" />;
+    return (
+        <>{children}</>
+    )
 }
 
 export default ProtectRoutes

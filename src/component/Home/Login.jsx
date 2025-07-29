@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { login } from '../../Redux/ReduxAuth/Slice/authSlice'
 import { Box, Button, Divider, Typography } from '@mui/material'
 import Card from '@mui/material/Card';
@@ -14,11 +14,26 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [message, setMessage] = useState('');
 
     const auth = useSelector((state) => state.auth);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.success) {
+
+        const timeout = setTimeout(() => {
+            navigate(location.pathname, { replace: true, state: {} });
+        }, 100); 
+
+        return () => clearTimeout(timeout);
+        }
+    }, [location, navigate]);
+
 
     const handleShowPassword = () => {
         setShowPassword(prev => !prev)
@@ -55,13 +70,13 @@ const Login = () => {
                     height: 600, 
                 }}
                 >
-                    <CardContent dividers>
+                    <CardContent>
                     <Typography gutterBottom variant="h4" component="div" sx={{margin: 2, fontWeight: '600'}}>
                         Đăng nhập
                     </Typography>
                     <Divider sx={{ margin: 3, borderColor: 'lightgray' }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary', margin: 2, marginTop: 4 }}>
-                        <form >
+                        <form onSubmit={handleLogin}>
                             <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                                 <Typography sx={{color: 'red'}}>*</Typography>
                                 <Typography sx={{color: 'black'}}>Email</Typography>
@@ -144,6 +159,7 @@ const Login = () => {
                                 >
                                     Đăng nhập
                                 </Button>
+                                {message && <p style={{ color: 'green' }}>{message}</p>}
                                 {auth.error && <h4 style={{ color: 'red', margin: 3 , marginTop: 13}}>{auth.error}</h4>} 
                             </Box><br />
                             <Divider sx={{ margin: 3, borderColor: 'lightgray' }} >

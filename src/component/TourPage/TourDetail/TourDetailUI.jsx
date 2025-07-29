@@ -478,13 +478,17 @@ const TourDetailUI = ({ tour }) => {
                 <Typography fontSize={14}>Chưa có đánh giá nào.</Typography>
               ) : (
                 submittedReviews.map((review, index) => (
-                  <Box key={index} mb={2}>
-                    <Rating value={review.rating} readOnly size="small" />
-                    <Typography fontSize={14} mt={1}>{review.content}</Typography>
-                    <Box mt={1} display="flex" gap={1}>
-                      {review.images.map((img, i) => (
-                        <img key={i} src={img} alt="" style={{ width: 110, height: 80, objectFit: 'cover' }} />
-                      ))}
+                  <Box key={index} mb={2} sx={{display: 'flex', gap: 2}}>
+                    <img src={user.user.avatar} alt="user" className="user" />
+                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                      <Typography fontSize={14} fontWeight='bold'>{user.user.display_name}</Typography>
+                      <Rating value={review.rating} readOnly size="small" />
+                      <Typography fontSize={14} mt={1}>{review.content}</Typography>
+                      <Box mt={1} display="flex" gap={1}>
+                        {review.images.map((img, i) => (
+                          <img key={i} src={img} alt="" style={{ width: 110, height: 80, objectFit: 'cover' }} />
+                        ))}
+                      </Box>
                     </Box>
                   </Box>
                 ))

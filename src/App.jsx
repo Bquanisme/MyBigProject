@@ -12,6 +12,12 @@ import TourDetail from './component/TourPage/TourDetail/TourDetail'
 import Login from './component/Home/Login'
 import ShareLayout from './component/ChangePage/ShareLayout'
 import Register from './component/Home/Register'
+import Settings from './component/Home/Settings'
+import ShareSettings from './component/ChangePage/ShareSettings'
+import DashBoard from './component/SettingsPage/DashBoard/DashBoard'
+import History from './component/SettingsPage/History/History'
+import Account from './component/SettingsPage/Account/Account'
+import ChangePassword from './component/SettingsPage/ChangePassword/ChangePassword'
 
 
 function App() {
@@ -38,12 +44,25 @@ function App() {
           }
         >
           <Route index element={<Home />} />
-          <Route path="User/Room" element={<Room />} />
-          <Route path="User/Room/:id" element={<RoomDetail />} />
-          <Route path="User/Tour" element={<Tour />} />
-          <Route path="User/Tour/:id" element={<TourDetail />} />
-          <Route path="User/News" element={<News />} />
-          <Route path="Contacts" element={<ScrollDialog />} />
+          <Route path="User/Room" element={<ProtectRoutes><Room /></ProtectRoutes>} />
+          <Route path="User/Room/:id" element={<ProtectRoutes><RoomDetail /></ProtectRoutes>} />
+          <Route path="User/Tour" element={<ProtectRoutes><Tour /></ProtectRoutes>} />
+          <Route path="User/Tour/:id" element={<ProtectRoutes><TourDetail /></ProtectRoutes>} />
+          <Route path="User/News" element={<ProtectRoutes><News /></ProtectRoutes>} />
+          <Route path="Contacts" element={<ProtectRoutes><ScrollDialog /></ProtectRoutes>} />
+        </Route>
+        <Route
+          path="/User/User/Settings"
+          element={
+            <ProtectRoutes>
+              <ShareSettings />
+            </ProtectRoutes>
+          }
+        >
+          <Route index element={<DashBoard />} />
+          <Route path="History" element={<History />} />
+          <Route path="Account" element={<Account />} />
+          <Route path="ChangePassword" element={<ChangePassword />} />
         </Route>
       </Routes>
     </BrowserRouter>

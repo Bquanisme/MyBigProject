@@ -38,16 +38,20 @@ const authSlice = createSlice({
             state.user = null;
             localStorage.removeItem('token');
         },
+        resetStatus: (state) => {
+          state.status = null;
+          state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
         .addCase(register.pending, (state) => {
             state.status = 'loading'
         })
-        .addCase(register.fulfilled, (state, action) => {
+        .addCase(register.fulfilled, (state) => {
             state.status = 'succeeded';
-            state.user = action.payload,
-            state.token = action.payload
+            state.user = null,
+            state.token = null
         })
         .addCase(register.rejected, (state, action) => {
             state.status = 'falled'
@@ -65,5 +69,5 @@ const authSlice = createSlice({
     },
 })
 
-export const { logout } = authSlice.actions;
+export const { logout, resetStatus } = authSlice.actions;
 export default authSlice.reducer;

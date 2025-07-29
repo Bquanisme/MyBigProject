@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { register } from '../../Redux/ReduxAuth/Slice/authSlice';
+import { register, resetStatus } from '../../Redux/ReduxAuth/Slice/authSlice';
 import { Box, Button, Divider, Typography } from '@mui/material'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -13,6 +13,7 @@ const Register = () => {
       const [name, setName] = useState('')
       const [email, setEmail] = useState('')
       const [password, setPassword] = useState('')
+      const [phone, setPhone] = useState('')
       const [address, setAddress] = useState('')
       const [showPassword, setShowPassword] = useState(false)
   
@@ -25,15 +26,31 @@ const Register = () => {
           setShowPassword(prev => !prev)
       }
 
+    useEffect(() => {
+        if (auth.status === 'succeeded') {
+        setTimeout(() => {
+            dispatch(resetStatus()); 
+            navigate('/Login', { state: { success: true } });
+        }, 1500);
+        }
+    }, [auth.status, dispatch, navigate]);
+
       const handleSubmit = () => {
-        dispatch(register({name, email, password, address}));
+        dispatch(register({
+            email,
+            password,
+            display_name: name,
+            phone_number: phone,
+            detail_address: address,
+        }));
+        console.log({name, email, password, phone, address})
       }; 
   
       return (
           <Box sx={{
               backgroundImage: `url(${BgImage})`, 
               width: '100%',
-              height: '120vh',
+              height: '130vh',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
@@ -46,16 +63,16 @@ const Register = () => {
                   <Card 
                   sx={{ 
                       width: 650, 
-                      height: 800, 
+                      height: 870, 
                   }}
                   >
-                      <CardContent dividers>
+                      <CardContent>
                       <Typography gutterBottom variant="h4" component="div" sx={{margin: 2, fontWeight: '600'}}>
                           Đăng Ký Tài Khoản
                       </Typography>
                       <Divider sx={{ margin: 3, borderColor: 'lightgray' }} />
                       <Typography variant="body2" sx={{ color: 'text.secondary', margin: 2, marginTop: 4 }}>
-                          <form >
+                          <form onSubmit={handleSubmit}>
                               <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                                   <Typography sx={{color: 'red'}}>*</Typography>
                                   <Typography sx={{color: 'black'}}>Họ và Tên</Typography>
@@ -157,6 +174,30 @@ const Register = () => {
 
                               <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                                   <Typography sx={{color: 'red'}}>*</Typography>
+                                  <Typography sx={{color: 'black'}}>Điện thoại</Typography>
+                              </Box>
+                              <Box>
+                                <input 
+                                  placeholder="Phone Number" 
+                                  name="phone" 
+                                  type="number" 
+                                  value={phone} 
+                                  onChange={(e) => setPhone(e.target.value)}
+                                  style={{
+                                  width: '100%', 
+                                  margin: 3, 
+                                  marginTop: 15,
+                                  height: '40px',
+                                  borderRadius: '7px',
+                                  borderStyle: 'solid',
+                                  borderColor: 'lightgrey',
+                                  paddingLeft: 12
+                                  }}
+                                />
+                              </Box><br />
+
+                              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                  <Typography sx={{color: 'red'}}>*</Typography>
                                   <Typography sx={{color: 'black'}}>Địa chỉ</Typography>
                               </Box>
                               <Box>
@@ -184,10 +225,10 @@ const Register = () => {
                                       onClick={handleSubmit}
                                       variant="contained"
                                   >
-                                      Đăng ký
+                                      Đăng Ký
                                   </Button>
-                                  {auth.status === 'loading' && <p>Đang xử lý...</p>}
-                                  {auth.error && <p style={{ color: 'red' }}>{auth.error}</p>}
+                                  {auth.status === 'succeeded' && <p style={{ color: 'green' }}>Đăng ký thành công!</p>}
+                                  {auth.error && <h4 style={{ color: 'red', margin: 3 , marginTop: 13}}>{auth.error}</h4>} 
                               </Box>
                               <Divider sx={{ margin: 3, borderColor: 'lightgray' }} >
                               <Typography style={{ 
@@ -206,7 +247,7 @@ const Register = () => {
                               >
                                   <Typography sx={{display: 'flex', gap: 1 }}>
                                       Đã có tài khoản ?
-                                      <Link to="/Login" style={{ textDecoration: 'none'}}> 
+                                      <Link to="/Login" state={{ success: true }} style={{ textDecoration: 'none'}}> 
                                           Đăng Nhập ngay
                                       </Link>                         
                                   </Typography> 

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TravelLogo from '../../assets/TravelLogo.jpg';
 import '../../AllCss/Navbar.css';
+import dog from '../../assets/cho.jpg';
 import ScrollDialog from '../ContactPage/ScrollDialog';
 import {
   Button,
@@ -34,13 +35,13 @@ const NavbarForUser = () => {
 
 
   const handleNavigateSettings = () => {
-    navigate('/settings');
+    navigate('User/Settings');
     handleClose();
   };
 
 //   LogoutButton
   const handleLogout = () => {
-    console.log('Đã đăng xuất');
+    // console.log('Đã đăng xuất');
     dispatch(logout());
     navigate('/');
   };
@@ -82,7 +83,7 @@ const NavbarForUser = () => {
 
         {/* User Section */}
         <div className="text">
-          <img src={auth.user.avatar} alt="user" className="user" />
+          {auth.user.avatar ? <img src={auth.user.avatar} alt="user" className="user" /> : <img src={dog} alt="user" className="user" />}
           <Typography
             ref={anchorRef}
             sx={{
@@ -96,7 +97,15 @@ const NavbarForUser = () => {
           >
             {auth.user.display_name} 
           </Typography>
-          <ArrowDropDownIcon onClick={handleToggle} sx={{color: 'white'}}/>
+          <ArrowDropDownIcon onClick={handleToggle} sx={{
+            color: 'white', 
+            '&:hover': {
+            backgroundColor: 'gray',
+            color: 'white',
+            cursor: 'pointer',
+            },
+            }}
+          />
 
           <Menu
             anchorEl={anchorRef.current}

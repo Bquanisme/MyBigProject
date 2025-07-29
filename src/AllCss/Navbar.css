@@ -53,3 +53,39 @@ body{
     text-decoration: none;
     gap: 10px; 
 }
+
+.Background-for-settings{
+    width: 250px;
+    height: 100%;
+
+}
+
+.container-for-settings{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 2px;
+}
+
+.nav-for-settings{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    text-decoration: none;
+}
+
+.nav-for-settings a {
+  text-decoration: none;
+}
+
+.logo-for-company{
+    display: flex;
+    justify-content: center;
+}
+.text-for-company{
+    background-color: rgb(210, 229, 236);
+    color: rgb(123, 83, 231);
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+}
