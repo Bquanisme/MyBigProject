@@ -24,8 +24,9 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getBookingOrder } from '../../../Redux/ReduxAuth/Slice/roomTourSlice';
 
 
 const TourDetailUI = ({ tour }) => {
@@ -40,8 +41,12 @@ const TourDetailUI = ({ tour }) => {
 
   const [open, setOpen] = React.useState(false);
   const [openTour, setOpenTour] = React.useState(false);
+  
+  const idUser = useSelector(state => state.auth.user.id);
+  const { id } = useParams();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
   const user = useSelector(state => state.auth.user)
   console.log(user)
@@ -50,15 +55,19 @@ const TourDetailUI = ({ tour }) => {
     setOpen(true);
   };
 
+  const GetTour = () => {
+    dispatch(getBookingOrder({
+      id_room: id,
+      id_user: idUser,
+    }))
+    navigate('/User/Settings');
+  }
+
   const handleLogin = () => {
     navigate('/Login')
   }
   
    const handleClickOpenTour = () => {
-    // if(user === null){
-    //   navigate('/Login')
-    // }else{
-    // }
     setOpenTour(true);
   };
 
@@ -224,7 +233,7 @@ const TourDetailUI = ({ tour }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseforX} variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} >Hủy</Button>
-          <Button onClick={handleCloseforX} variant="contained" size='small'>Đặt Tour</Button>
+          <Button onClick={GetTour} variant="contained" size='small'>Đặt Tour</Button>
         </DialogActions>
       </Dialog>
       : <Dialog
@@ -509,11 +518,9 @@ const TourDetailUI = ({ tour }) => {
           >
             <Typography fontWeight="bold">Ngày khởi hành</Typography>
             <Typography mb={2}>{tour.start_date}</Typography>
-            {/* <Typography mb={2}>{new Date(room?.start_date || null).toLocaleDateString('vi-VN')}</Typography> */}
 
             <Typography fontWeight="bold">Ngày kết thúc</Typography>
             <Typography mb={2}>{tour.end_date}</Typography>
-            {/* <Typography mb={2}>{new Date(room?.end_date).toLocaleDateString('vi-VN')}</Typography> */}
 
             <Typography fontWeight="bold">Ưu đãi</Typography><br />
             <Typography sx={{fontSize: '12px', display: 'flex', justifyContent: 'space-between'}}>

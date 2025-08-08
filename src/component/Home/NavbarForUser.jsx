@@ -20,8 +20,8 @@ const NavbarForUser = () => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
 
-  const auth = useSelector(state => state.auth.user)
-  console.log(auth)
+  const user = useSelector(state => state.auth.user)
+  console.log(user)
 
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const NavbarForUser = () => {
 
 
   const handleNavigateSettings = () => {
-    navigate('User/Settings');
+    navigate('Settings');
     handleClose();
   };
 
@@ -62,17 +62,17 @@ const NavbarForUser = () => {
             </Link>
           </div>
           <div>
-            <Link to="/User/User/Room">
+            <Link to="Room">
               <Button style={{ color: 'white' }}>Room</Button>
             </Link>
           </div>
           <div>
-            <Link to="/User/User/Tour">
+            <Link to="Tour">
               <Button style={{ color: 'white' }}>Tour</Button>
             </Link>
           </div>
           <div>
-            <Link to="/User/User/News">
+            <Link to="News">
               <Button style={{ color: 'white' }}>Tin tức</Button>
             </Link>
           </div>
@@ -83,8 +83,9 @@ const NavbarForUser = () => {
 
         {/* User Section */}
         <div className="text">
-          {auth.user.avatar ? <img src={auth.user.avatar} alt="user" className="user" /> : <img src={dog} alt="user" className="user" />}
+          {user?.avatar ? <img src={user?.avatar} alt="user" className="user" /> : <img src={dog} alt="user" className="user" />}
           <Typography
+            onClick={handleToggle}
             ref={anchorRef}
             sx={{
               cursor: 'pointer',
@@ -95,7 +96,7 @@ const NavbarForUser = () => {
               gap: '4px',
             }}
           >
-            {auth.user.display_name} 
+            {user?.display_name || 'Username default'} 
           </Typography>
           <ArrowDropDownIcon onClick={handleToggle} sx={{
             color: 'white', 

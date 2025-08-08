@@ -38,40 +38,39 @@ const DrawerForSettings = () => {
   });
 
   return (
-    <Box
+    <Box 
       sx={{
-        width: 260,
-        height: '100vh',
+        width: 270,
+        height: '100%',
         backgroundColor: '#f9f9f9',
         p: 2,
         boxShadow: 3,
       }}
     >
-      <Typography variant="subtitle1" sx={{ mb: 2, color: '#1976d2', fontWeight: 'bold' }}>
+      <Typography variant="subtitle1" className='text-for-company' sx={{mb: 5}}>
         Công ty du lịch Việt Nam
       </Typography>
 
-      <Divider sx={{ mb: 2 }} />
 
-      <Link to="/User/User/Settings" style={{ textDecoration: 'none' }}>
+      <Link to="/User/Settings" style={{ textDecoration: 'none' }}>
         <Button fullWidth startIcon={<DashboardIcon />} sx={buttonStyle('dashboard')}>
           Dashboard Personal
         </Button>
       </Link>
 
-      <Link to="User/User/Settings/History" style={{ textDecoration: 'none' }}>
+      <Link to="/User/Settings/History" style={{ textDecoration: 'none' }}>
         <Button fullWidth startIcon={<ListAltIcon />} sx={buttonStyle('orders')}>
           Lịch sử đặt hàng
         </Button>
       </Link>
 
-      <Link to="/User/User/Settings/Account" style={{ textDecoration: 'none' }}>
+      <Link to="/User/Settings/Account" style={{ textDecoration: 'none' }}>
         <Button fullWidth startIcon={<PersonIcon />} sx={buttonStyle('profile')}>
           Thông tin cá nhân
         </Button>
       </Link>
 
-      <Link to="/User/User/Settings/ChangePassword" style={{ textDecoration: 'none' }}>
+      <Link to="/User/Settings/ChangePassword" style={{ textDecoration: 'none' }}>
         <Button fullWidth startIcon={<LockIcon />} sx={buttonStyle('password')}>
           Đổi mật khẩu
         </Button>

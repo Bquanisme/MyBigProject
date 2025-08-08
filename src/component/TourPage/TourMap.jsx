@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const TourMap = ({ id, logo, name, description, people, tickets, cost, days }) => {
   const user = useSelector((state) => state.auth.user);
-  const checkUser = user ? '/User/User/Tour' : '/Tour';
+  const checkUser = user ? '/User/Tour' : '/Tour';
 
   return (
     <div className='margin'>

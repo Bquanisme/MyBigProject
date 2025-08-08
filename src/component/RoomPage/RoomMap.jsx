@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const RoomMap = ({id, logo, name, description, people, tickets, cost }) => {
   const user = useSelector((state) => state.auth.user);
-  const checkUser = user ? '/User/User/Room' : '/Room';
+  const checkUser = user ? '/User/Room' : '/Room';
 
   return (
     <div className='margin'>

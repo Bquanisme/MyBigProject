@@ -21,7 +21,7 @@ const TourDetail = () => {
   }, [id]);
 
   console.log("ID gửi lên server:", id);
-  if (!tour) return <img src={loadingGif} alt="" />;
+  if (!tour) return <img src={loadingGif} alt=""/>;
 
   return (
     <div>

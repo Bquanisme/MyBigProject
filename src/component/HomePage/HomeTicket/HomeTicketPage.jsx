@@ -14,10 +14,8 @@ const HomeTicketPage = () => {
   const user = useSelector(state => state.auth.user)
 
   const handleNavigateTour = () => {
-    if(user === null){
-      navigate('/Tour')
-    }else{
-      navigate('User/Tour')
+    if(user){
+      navigate('/User/Tour')
     }
   }
 

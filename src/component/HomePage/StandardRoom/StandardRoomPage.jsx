@@ -19,7 +19,7 @@ const StandardRoomPage = () => {
     if(user === null){
       navigate('/Room')
     }else{
-      navigate('User/Room')
+      navigate('/User/Room')
     }
   }
 
