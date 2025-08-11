@@ -3,6 +3,7 @@ import RoomReducer from './RoomSlice'
 import TourReducer from './TourSlice'
 import AuthReducer from './ReduxAuth/Slice/authSlice'
 import roomTourReducer from './ReduxAuth/Slice/roomTourSlice'
+import editUserReducer from './ReduxAuth/Slice/editUserSlice'
 
 export const store = configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
         tour: TourReducer,
         auth: AuthReducer,
         roomTour: roomTourReducer,
+        editUser: editUserReducer,
     }
 })

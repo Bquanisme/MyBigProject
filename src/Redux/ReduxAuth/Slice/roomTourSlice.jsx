@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { bookingAPI, getAllOrder, getListBookingAPI, postBookingAPIDelete } from "./bookingAPI";
 
+//danh sach dat don
 export const getListOrder = createAsyncThunk('order/list-order', async (payload, thunkAPI) => {
   try {
     const res = await getListBookingAPI();
@@ -12,6 +13,7 @@ export const getListOrder = createAsyncThunk('order/list-order', async (payload,
   }
 });
 
+//post dat tour
 export const getBookingOrder = createAsyncThunk('order/booking-tour', async (payload, thunkAPI) => {
   try {
     const res = await bookingAPI(payload);
@@ -23,6 +25,7 @@ export const getBookingOrder = createAsyncThunk('order/booking-tour', async (pay
   }
 });
 
+//Huy order
 export const BookingDelete = createAsyncThunk('order/cancel', async ({ id }, thunkAPI) => {
   try {
     await postBookingAPIDelete(id);
@@ -34,6 +37,7 @@ export const BookingDelete = createAsyncThunk('order/cancel', async ({ id }, thu
   }
 });
 
+//Chi tiet order
 export const getDetailOrder = createAsyncThunk('order/show', async (id, thunkAPI) => {
   try {
     const res = await getAllOrder(id);

@@ -17,5 +17,21 @@ export const getAllOrder = (id) => {
   return axiosClient.get(`/order/show/${id}`)
 }
 
+export const editUserAPI = (id, data) => {
+  const newdata = new FormData();
+    data.append("display_name", data.display_name);
+    data.append("phone_number", data.phone_number);
+    data.append("detail_address", data.detail_address);
+    data.append("image_delete", true);
+    data.append("image_data", data.avatar? data.avatar : "");
+
+  return axiosClient.post(`/user/update/${id}`, newdata)
+}
+
+export const detailUser = (id) => {
+  return axiosClient.get(`/user/show/${id}`)
+}
+
+
 
 

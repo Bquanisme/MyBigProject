@@ -183,7 +183,7 @@ const DashBoardUI = () => {
                   </Button>`
                 </Box>
               </Box>
-              <Divider sx={{width: '100%', display: 'flex', justifyContent: 'center'}}/>
+              <Divider sx={{ margin: 2, borderColor: 'lightgray' }}/>
             <Box
               key={item.id}
               display='flex'
