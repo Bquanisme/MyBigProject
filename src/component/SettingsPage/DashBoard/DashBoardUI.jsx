@@ -9,10 +9,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import BasicMenu from './MenuForDashBoard';
 import MenuForStatus from './MenuForStatus';
 import { useNavigate } from 'react-router-dom';
+import loadingGif from '../../../assets/loading.gif'
 
 const DashBoardUI = () => {
   const dispatch = useDispatch();
 
+  const {status} = useSelector(state => state.roomTour)
   const listOrders = useSelector(state => state.roomTour.listOrders)
   // console.log(listOrders)
   const navigate = useNavigate();
@@ -24,6 +26,23 @@ const DashBoardUI = () => {
 
   const handleShowFullOrder = (id) => {
     navigate(`/User/Settings/History/${id}`);
+  }
+
+  if (status === 'loading') {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: '50%', 
+        flexDirection: 'column', 
+        gap: 10 , 
+        m: 'auto', 
+        pt: '100px' 
+      }}>
+        <img src={loadingGif} style={{ width: '100%' }}/>
+      </Box>
+    );
   }
 
   const filteredData = listOrders.filter(order => {

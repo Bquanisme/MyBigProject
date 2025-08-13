@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../Redux/ReduxAuth/Slice/authSlice';
 import DrawerForSettings from './Drawer/DrawerForSettings';
+import dog from '../../assets/cho.jpg'
 
 const drawerWidth = 270;
 
@@ -74,12 +75,18 @@ const LayoutWithNavbar = ({ children }) => {
         </IconButton>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {user?.avatar && (
-            <img
-              src={user.avatar}
-              alt="avatar"
-              style={{ width: 32, height: 32, borderRadius: '50%' }}
-            />
+          {user?.avatar ? (
+              <img
+                src={user?.avatar}
+                alt="avatar"
+                style={{ width: 32, height: 32, borderRadius: '50%' }}
+              />
+          ) : (
+              <img
+                src={dog}
+                alt="avatar"
+                style={{ width: 32, height: 32, borderRadius: '50%' }}
+              />
           )}
           <Typography
             ref={anchorRef}

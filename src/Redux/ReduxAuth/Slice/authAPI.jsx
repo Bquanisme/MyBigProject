@@ -9,4 +9,12 @@ export const registerAPI = (userInfo) => {
   return axiosClient.post('/register', userInfo)
 }
 
+export const updatePsAPI = (id, password) => {
+  return axiosClient.post(`/user/updatePs/${id}`, password)
+}
+
+export const verifyEmailAPI = (number) => {
+  return axiosClient.post('/register/verify-code', number)
+}
+
 

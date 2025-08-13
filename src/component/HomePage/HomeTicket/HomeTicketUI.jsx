@@ -4,8 +4,20 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
 import PlaceIcon from '@mui/icons-material/Place';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const HomeTicketUI = ({ logo, name, description, days, people, locations, tickets, cost }) => {
+    const navigate = useNavigate();
+    const user = useSelector(state => state.auth.user)
+  
+    const handleNavigateTour = () => {
+      if(user){
+        navigate('/User/Tour')
+      }else{
+        navigate('/Tour')
+      }
+    }
   return (
     <div className='margin-home'>
       <Box display="flex" gap={2} p={2} borderRadius={2} boxShadow={1} bgcolor="#fff">
@@ -63,7 +75,7 @@ const HomeTicketUI = ({ logo, name, description, days, people, locations, ticket
           </Typography>
         </Box>
 
-        <Button variant="outlined" size="small" sx={{ mt: 1 }} >
+        <Button variant="outlined" size="small" sx={{ mt: 1 }} onClick={handleNavigateTour} >
           Đặt ngay
         </Button>
       </Box>

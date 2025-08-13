@@ -118,7 +118,10 @@ const AccountUI = () => {
                     {/* Cột 1 */}
                     <Box sx={{ flex: 1, minWidth: '250px' }}>
                       <Box>
-                        <Typography>Tài khoản *</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                          <Typography sx={{color: 'red'}}>*</Typography>
+                          <Typography>Tài khoản</Typography>
+                        </Box>
                         <input
                           type="text"
                           value={name}
@@ -138,7 +141,10 @@ const AccountUI = () => {
                       </Box>
 
                       <Box mt={4}>
-                        <Typography>Số điện thoại *</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                          <Typography sx={{color: 'red'}}>*</Typography>
+                          <Typography>Số điện thoại</Typography>
+                        </Box>
                         <input
                           type="text"
                           value={phoneNumber}
@@ -181,7 +187,10 @@ const AccountUI = () => {
                       </Box>
 
                       <Box mt={4}>
-                        <Typography>Địa chỉ *</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                          <Typography sx={{color: 'red'}}>*</Typography>
+                          <Typography>Địa chỉ</Typography>
+                        </Box>
                         <input
                           type="text"
                           value={address}
@@ -275,9 +284,10 @@ const AccountUI = () => {
                     {submitMessage && (
                       <Typography
                         sx={{
-                          mt: 1,
+                          mt: 2,
+                          ml: 1,
                           color: submitSuccess ? 'green' : 'red',
-                          fontSize: '14px'
+                          fontSize: '17px'
                         }}
                       >
                         {submitMessage}

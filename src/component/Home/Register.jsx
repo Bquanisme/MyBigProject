@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { register, resetStatus } from '../../Redux/ReduxAuth/Slice/authSlice';
-import { Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from '@mui/material'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import BgImage from '../../assets/room1.jpg'; 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VerifyEmail from './VerifyEmail';
 
 const Register = () => {
       const [name, setName] = useState('')
@@ -16,6 +17,7 @@ const Register = () => {
       const [phone, setPhone] = useState('')
       const [address, setAddress] = useState('')
       const [showPassword, setShowPassword] = useState(false)
+      const [openDialog, setOpenDialog] = useState(false)
   
       const auth = useSelector((state) => state.auth);
   
@@ -26,11 +28,16 @@ const Register = () => {
           setShowPassword(prev => !prev)
       }
 
+      const handleClose = () => {
+        setOpenDialog(false)
+      }
+
     useEffect(() => {
         if (auth.status === 'succeeded') {
         setTimeout(() => {
             dispatch(resetStatus()); 
-            navigate('/Login', { state: { success: true } });
+            setOpenDialog(true)
+            // navigate('/Login', { state: { success: true } });
         }, 1500);
         }
     }, [auth.status, dispatch, navigate]);
@@ -226,11 +233,11 @@ const Register = () => {
                                       variant="contained"
                                   >
                                       Đăng Ký
-                                  </Button>
-                                  {auth.status === 'succeeded' && <p style={{ color: 'green' }}>Đăng ký thành công!</p>}
-                                  {auth.error && <h4 style={{ color: 'red', margin: 3 , marginTop: 13}}>{auth.error}</h4>} 
+                                  </Button><br />
+                                  {auth.status === 'succeeded' && <Typography sx={{ color: 'green', fontSize: '14px'}}>Đăng ký thành công!</Typography>}
+                                  {auth.error && <Typography sx={{ color: 'red', fontSize: '14px'}}>{auth.error}</Typography>} 
                               </Box>
-                              <Divider sx={{ margin: 3, borderColor: 'lightgray' }} >
+                              <Divider sx={{ margin: 3, mt: 1, borderColor: 'lightgray' }} >
                               <Typography style={{ 
                                   textAlign: 'center',
                                   color: 'black',
@@ -260,6 +267,10 @@ const Register = () => {
                       </CardContent>
                   </Card>
             </Box>
+            <VerifyEmail 
+                openDialog={openDialog}
+                handleCloseDialog={handleClose}
+            />
           </Box>
       )
 }

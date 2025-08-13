@@ -19,11 +19,11 @@ export const getAllOrder = (id) => {
 
 export const editUserAPI = (id, data) => {
   const newdata = new FormData();
-    data.append("display_name", data.display_name);
-    data.append("phone_number", data.phone_number);
-    data.append("detail_address", data.detail_address);
-    data.append("image_delete", true);
-    data.append("image_data", data.avatar? data.avatar : "");
+    newdata.append("display_name", data.display_name);
+    newdata.append("phone_number", data.phone_number);
+    newdata.append("detail_address", data.detail_address);
+    newdata.append("image_delete", true);
+    newdata.append("image_data", data.avatar? data.avatar : "");
 
   return axiosClient.post(`/user/update/${id}`, newdata)
 }

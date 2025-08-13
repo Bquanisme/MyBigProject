@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginAPI, registerAPI } from "./authAPI";
+import { loginAPI, registerAPI, verifyEmailAPI } from "./authAPI";
 
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
@@ -25,11 +25,23 @@ export const register = createAsyncThunk('register', async (userInfo, thunkAPI) 
   }
 });
 
+export const verifyCode = createAsyncThunk('register/verify-code', async (payload, thunkAPI) => {
+  try {
+    const res = await verifyEmailAPI(payload);
+    localStorage.setItem('token', res.data.token);
+    return res.data
+  } 
+  catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.message || 'register failed');
+  }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
         token: localStorage.getItem('token') || null,
         user: JSON.parse(localStorage.getItem('user-data')) || null,
+        verifyEmail: [],
         status: '',
         error: null,
     },
@@ -71,6 +83,21 @@ const authSlice = createSlice({
         .addCase(login.rejected, (state, action) => {
             state.error = action.payload;
         })
+
+
+        .addCase(verifyCode.pending, (state) => {
+            state.verifyStatus = 'loading';
+            state.verifyError = null;
+        })
+        .addCase(verifyCode.fulfilled, (state, action) => {
+            state.verifyStatus = 'succeeded';
+            state.verifyError = null;
+            state.verifyEmail = action.payload;
+        })
+        .addCase(verifyCode.rejected, (state, action) => {
+            state.verifyStatus = 'failed';
+            state.verifyError = action.error.message;
+        });
     },
 })
 

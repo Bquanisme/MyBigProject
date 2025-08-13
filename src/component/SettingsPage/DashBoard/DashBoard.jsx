@@ -14,7 +14,7 @@ const DashBoard = () => {
 
   useEffect(() => {
     fetchApi();
-  },[]); 
+  }, []); 
 
   return (
     <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: 2 }}>
