@@ -38,26 +38,27 @@ const HistoryDetail = () => {
                 <Box
                 sx={{
                     gap: 5,
-                    pt: 3
+                    pt: 3,
+                    pb: 3,
                 }}
             >
                 <Box
                   sx={{
                     width: '100%',
-                    height: 400,
+                    height: 440,
                     bgcolor: '#fff',
                     borderRadius: 3,
                     boxShadow: 4,
                     overflow: 'hidden',
                     display: 'flex',
-                    gap: 3,
+                    gap: 2,
                     mt: 1,
                     marginBottom: 2,
                   }}
                 >
                   <Box
                     sx={{
-                      width: '300px',
+                      width: '330px',
                       height: 210,
                     }}
                   >
@@ -67,19 +68,19 @@ const HistoryDetail = () => {
                       style={{
                         borderRadius: 10,
                         width: '100%',
-                        height: 400,
+                        height: 440,
                         objectFit: 'cover',
                       }}
                     />
                   </Box>
             
-                  <Box sx={{ p: 2 , display: 'flex', flexDirection: 'column', gap: 5}}>
+                  <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 5}}>
                     <Typography
                       variant="subtitle1"
                       fontWeight="bold"
                       color="black"
                       fontSize="17px"
-                      mb={0.5}
+                      mb={0}
                       mt={2}
                     >
                       {detail.name}
@@ -105,7 +106,7 @@ const HistoryDetail = () => {
                     <Box sx={{display: 'flex', gap: 11.5}}>
                       <Typography fontWeight='bold'>Ngày kết thúc:</Typography> 
                       <Typography>{(detail.end_date)}</Typography>
-                    </Box> 
+                    </Box>
                   </Box>
                 </Box><br />
                 <Box
@@ -132,7 +133,7 @@ const HistoryDetail = () => {
                     </Typography>
                 </Box>
                 </Box>
-                <Box sx={{ flex: '1 1 40%', minWidth: 300 }}>
+                <Box sx={{ flex: '1 1 45%', minWidth: 300 }}>
                     <Sales id={id}/>
                 </Box>
             </Box>

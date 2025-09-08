@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -9,6 +9,9 @@ import {
   Link,
   Chip,
   Divider,
+  DialogContentText,
+  Slide,
+  TextField,
 } from '@mui/material';
 import background from '../../../assets/room10.jpg';     
 import backgroundImage from '../../../assets/room1.jpg';
@@ -22,6 +25,12 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getBookingOrder, postBookingRoomOrder } from '../../../Redux/ReduxAuth/Slice/roomTourSlice';
+import { getShowReview, postCreateReview } from '../../../Redux/ReduxAuth/Slice/reviewSlice';
+import dog from '../../../assets/cho.jpg'
+
 
 const RoomDetailUI = ({ room }) => {
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -34,15 +43,55 @@ const RoomDetailUI = ({ room }) => {
   }));
 
   const [open, setOpen] = React.useState(false);
+  const [openTour, setOpenTour] = React.useState(false);
+  const [startDate, setStartDate] = React.useState('');
+  const [endDate, setEndDate] = React.useState('');
+
+  
+  const idUser = useSelector(state => state.auth.user.id);
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getShowReview(id))
+  }, [dispatch, id])
+  
+  // const 
+
+  const user = useSelector(state => state.auth.user)
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const GetRoom = () => {
+    dispatch(postBookingRoomOrder({
+      id_room: id,
+      id_user: idUser,
+      start_date: startDate,
+      end_date: endDate,
+    }))
+    navigate('/User/Settings');
+  }
+  console.log('startdate: ', startDate)
+
+  const handleLogin = () => {
+    navigate('/Login')
+  }
+  
+   const handleClickOpenTour = () => {
+    setOpenTour(true);
+  };
+
   const handleCloseforX = () => {
     setOpen(false);
+    setOpenTour(false);
   };
 
   const handleCloseforDelete = () => {
+  setOpenTour(false);
   setOpen(false);
   setValue(0); 
   setHover(-1); 
@@ -81,25 +130,36 @@ const RoomDetailUI = ({ room }) => {
 
   const handleUpload = (event) => {
     const files = Array.from(event.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setUploadedImages(prev => [...prev, ...imageUrls]);
+    console.log('===>',files)
+    setUploadedImages(prev => [...prev, ...files]);
   };
 
   const [reviewContent, setReviewContent] = React.useState('');
-  const [submittedReviews, setSubmittedReviews] = React.useState([]);
 
-  const handleSubmitReview = () => {
-    setSubmittedReviews(prev => [
-      ...prev,
-      { rating: value, content: reviewContent, images: uploadedImages }
-    ]);
+  useEffect(() => {
+    dispatch(getShowReview(id))
+    // console.log(id)
+  }, [dispatch, id])
 
-    setValue(0);
-    setReviewContent('');
-    setUploadedImages([]);
-    handleCloseforX();
+  const showAllReview = useSelector(state => state.review.showReview)
+
+  const handleSubmitReview = async () => {
+    await dispatch(postCreateReview({
+      user_id: idUser,
+      room_id: id,
+      rate: value,
+      content: reviewContent,
+      images: uploadedImages
+    }))
+    dispatch(getShowReview(id))
+    setOpen(false)
   };
 
+  // console.log('room_id:',id, 'user_id:',idUser, 'rate:',value, 'content: ',reviewContent, 'img:',uploadedImages)
+
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
 
   return (
     <div style={{backgroundColor: 'rgb(238, 235, 235)'}}>
@@ -149,15 +209,15 @@ const RoomDetailUI = ({ room }) => {
           </Box>
         </Box>
 
-        {/* Button and descripe */}
+        {/* get and descripe */}
         <Stack spacing={2}>
           <Button
             variant="contained"
             color="error"
             sx={{ width: 250, fontWeight: 'bold' }}
-            onClick={handleClickOpen}
+            onClick={handleClickOpenTour}
           >
-            Đặt room ngay
+            Đặt tour ngay
           </Button>
           <Button
             variant="outlined"
@@ -170,8 +230,89 @@ const RoomDetailUI = ({ room }) => {
         </Stack>
       </Box>
 
-      {/* Dialog */}
-      <Dialog
+      {/* Dialog getTour */}
+      {user  
+        ? <Dialog
+        PaperProps={{
+            sx: {
+            position: 'absolute',
+            top: 80,
+            m: 0,
+            borderRadius: 2,
+            width: 750
+            },
+        }}
+        open={openTour}
+        keepMounted
+        onClose={handleCloseforX}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle sx={{ m: 0, p: 2 , fontWeight: '550'}}>{"Xác Nhận Đặt Tour"}</DialogTitle>
+        <DialogContent sx={{display: 'flex', gap: 8}}>
+          <Box sx={{ m: 0, p: 0, display: 'flex', flexDirection: 'column', gap: 1}}>
+            <DialogContentText id="alert-dialog-slide-description" sx={{ fontWeight: '100', color: 'black'}}>
+              Ngày khởi hành
+            </DialogContentText>
+            <TextField 
+              id="outlined-basic" 
+              variant="outlined" 
+              type="date" 
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              sx={{width: 230}} 
+            />
+          </Box>
+          <Box sx={{ m: 0, p: 0, display: 'flex', flexDirection: 'column', gap: 1}}>
+            <DialogContentText id="alert-dialog-slide-description" sx={{ fontWeight: '100', color: 'black'}}>
+              Ngày kết thúc
+            </DialogContentText>
+            <TextField 
+              id="outlined-basic" 
+              variant="outlined" 
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              sx={{width: 230}} 
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseforX} variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} >Hủy</Button>
+          <Button onClick={GetRoom} variant="contained" size='small'>Đặt Tour</Button>
+        </DialogActions>
+      </Dialog>
+      : <Dialog
+        PaperProps={{
+            sx: {
+            position: 'absolute',
+            top: 80,
+            m: 0,
+            borderRadius: 2,
+            width: 750
+            },
+        }}
+        open={openTour}
+        keepMounted
+        onClose={handleCloseforX}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle sx={{ m: 0, p: 2 , fontWeight: '550'}}>{"Bạn chưa đăng nhập"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description" sx={{ m: 0, p: 2 , fontWeight: '100', color: 'black'}}>
+            Hãy đăng nhập để có thể đặt Room !
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseforX} variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} >Hủy</Button>
+          <Button onClick={handleLogin} variant="contained" size='small'>Đăng nhập</Button>
+        </DialogActions>
+      </Dialog> 
+      }
+
+
+      {/* Dialog descripe*/}
+      {user
+        ? <Dialog
         PaperProps={{
             sx: {
             position: 'absolute',
@@ -204,7 +345,8 @@ const RoomDetailUI = ({ room }) => {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Typography display='flex'>
+          <form onSubmit={handleSubmitReview}>
+          <Typography sx={{display: 'flex', gap: 1}}>
             <Typography>
               Chất lượng:
             </Typography>
@@ -225,22 +367,25 @@ const RoomDetailUI = ({ room }) => {
               <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
             )}
           </Typography><br /><br />
-          <Typography gutterBottom>
+          <Typography sx={{display : 'flex', flexDirection: 'column'}}>
             Nội dung
-            <form >
-              <textarea 
-                value={reviewContent}
-                onChange={(e) => setReviewContent(e.target.value)}
-                style={{width: '100%', height: '80px', marginTop: '10px'}} 
-              />
-            </form>
+            <textarea 
+              value={reviewContent}
+              onChange={(e) => setReviewContent(e.target.value)}
+              style={{width: '100%', height: '80px', marginTop: '10px', fontSize: 15, padding: 5}} 
+            />
           </Typography><br /><br />
           <Typography gutterBottom>
             Hình ảnh
             <Typography style={{ marginTop: '10px'}}>
               <Box mt={2} display="flex" gap={1}>
               {uploadedImages.map((src, index) => (
-                <img key={index} src={src} alt="" style={{ width: 110, height: 100, objectFit: 'cover' }} />
+                <img 
+                  key={index} 
+                  src={URL.createObjectURL(src)} 
+                  alt="" 
+                  style={{ width: 110, height: 100, objectFit: 'cover' }} 
+                />
               ))}
               </Box>
             </Typography><br />
@@ -257,6 +402,7 @@ const RoomDetailUI = ({ room }) => {
               />
             </Button>
           </Typography>
+          </form>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} onClick={handleCloseforDelete}>
@@ -267,7 +413,34 @@ const RoomDetailUI = ({ room }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      : <Dialog
+        PaperProps={{
+            sx: {
+            position: 'absolute',
+            top: 80,
+            m: 0,
+            borderRadius: 2,
+            width: 750
+            },
+        }}
+        onClose={handleCloseforX}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <DialogTitle sx={{ m: 0, p: 2 , fontWeight: '550'}}>{"Bạn chưa đăng nhập"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description" sx={{ m: 0, p: 2 , fontWeight: '100', color: 'black'}}>
+            Hãy đăng nhập để có thể bình luận !
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseforX} variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} >Hủy</Button>
+          <Button onClick={handleLogin} variant="contained" size='small'>Đăng nhập</Button>
+        </DialogActions>
+      </Dialog>
+      }
 
+      {/* Left link id */}
       <Box px={10} mt={6} display="flex" justifyContent="space-between" >
         <Box>
           <Stack direction="column" spacing={3} mb={3} sx={{ '& a': { textDecoration: 'none', color: 'black' } }}>
@@ -358,19 +531,42 @@ const RoomDetailUI = ({ room }) => {
                 borderRadius: 2,
                 p: 2,
                 maxWidth: 600,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
               }}
             >
-              {submittedReviews.length === 0 ? (
+              {showAllReview.length === 0 ? (
                 <Typography fontSize={14}>Chưa có đánh giá nào.</Typography>
               ) : (
-                submittedReviews.map((review, index) => (
-                  <Box key={index} mb={2}>
-                    <Rating value={review.rating} readOnly size="small" />
-                    <Typography fontSize={14} mt={1}>{review.content}</Typography>
-                    <Box mt={1} display="flex" gap={1}>
-                      {review.images.map((img, i) => (
-                        <img key={i} src={img} alt="" style={{ width: 110, height: 80, objectFit: 'cover' }} />
-                      ))}
+                showAllReview.map((review, index) => (
+                  <Box key={index} mb={2} sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{maxWidth: 40, maxHeight: 40}}>
+                      <img 
+                        src={review?.user?.avatar || dog} 
+                        alt="user" 
+                        className="user" 
+                        style={{ width: 40, height: 40, borderRadius: '50%' }} 
+                      />
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Typography fontSize={14} fontWeight="bold">
+                        {review?.user?.display_name || 'NaN'}
+                      </Typography>
+                      <Rating value={review.rate} readOnly size="small" />
+                      <Typography fontSize={14} mt={1}>{review.content}</Typography>
+
+                      <Box mt={1} display="flex" gap={1}>
+                        {(review.image).map((img, i) => (
+                          <img
+                            key={i}
+                            src={img?.image_data || dog}
+                            alt=""
+                            style={{ width: 110, height: 80, objectFit: "cover" }}
+                          />
+                        ))}
+                      </Box>
                     </Box>
                   </Box>
                 ))
@@ -379,6 +575,7 @@ const RoomDetailUI = ({ room }) => {
           </Box>
         </Box>
 
+        {/* Right box */}
         <Box>
           <Box
             sx={{
@@ -390,11 +587,9 @@ const RoomDetailUI = ({ room }) => {
           >
             <Typography fontWeight="bold">Ngày khởi hành</Typography>
             <Typography mb={2}>{room.start_date}</Typography>
-            {/* <Typography mb={2}>{new Date(room?.start_date || null).toLocaleDateString('vi-VN')}</Typography> */}
 
             <Typography fontWeight="bold">Ngày kết thúc</Typography>
             <Typography mb={2}>{room.end_date}</Typography>
-            {/* <Typography mb={2}>{new Date(room?.end_date).toLocaleDateString('vi-VN')}</Typography> */}
 
             <Typography fontWeight="bold">Ưu đãi</Typography><br />
             <Typography sx={{fontSize: '12px', display: 'flex', justifyContent: 'space-between'}}>

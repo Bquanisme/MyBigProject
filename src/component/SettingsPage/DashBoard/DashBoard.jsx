@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const DashBoard = () => {
   const listOrders  = useSelector(state => state.roomTour.listOrders)
-  console.log('===>',listOrders)
+  // console.log('===>',listOrders)
   const dispatch = useDispatch()
   const fetchApi = async () => {
      dispatch(getListOrder())

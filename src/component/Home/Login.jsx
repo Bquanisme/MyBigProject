@@ -64,8 +64,8 @@ const Login = () => {
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Card sx={{ width: 650, height: 600 }}>
-          <CardContent>
+        <Card sx={{ width: 650 }}>
+          <CardContent sx={{height: '100%'}}>
             <Typography gutterBottom variant="h4" sx={{ m: 2, fontWeight: '600' }}>
               Đăng nhập
             </Typography>
@@ -170,7 +170,7 @@ const Login = () => {
                   )}
                 </Button>
                 {auth.error && (
-                  <Typography sx={{ color: 'red', margin: 3, marginTop: 13 }}>
+                  <Typography sx={{ color: 'red', margin: 0.5, marginTop: 1 }}>
                     {auth.error}
                   </Typography>
                 )}
@@ -198,10 +198,12 @@ const Login = () => {
                   </Link>
                 </Typography>
               </Typography>
-              <Typography sx={{ mt: '20px' }}>
+              <Typography sx={{ mt: '20px', display: 'flex', alignItems: 'center', gap: 1}}>
                 <Link to="/" style={{ textDecoration: 'none', margin: 3 }}>
                   Quay về trang chủ
                 </Link>
+                <Typography>/</Typography>
+                <Link to='/LoginAdmin' style={{ textDecoration: 'none', margin: 3 }}>Đăng nhập Admin</Link>
               </Typography>
             </form>
           </CardContent>

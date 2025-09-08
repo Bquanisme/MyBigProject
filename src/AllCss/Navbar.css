@@ -15,7 +15,8 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .ChangeLogo{
@@ -85,6 +86,14 @@ body{
 .text-for-company{
     background-color: rgb(210, 229, 236);
     color: rgb(123, 83, 231);
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+}
+
+.text-for-company-admin{
+    background-color: rgb(247, 248, 248);
+    color: black;
     text-align: center;
     padding: 1px;
     border-radius: 5px;

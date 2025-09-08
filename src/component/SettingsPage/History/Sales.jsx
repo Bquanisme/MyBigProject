@@ -1,11 +1,40 @@
-import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import { Alert, Box, Button, Snackbar, Typography } from '@mui/material'
+import React,  { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import CardSales from './CardSales'
+import { BookingDelete, getListOrder } from '../../../Redux/ReduxAuth/Slice/roomTourSlice'
+import { useNavigate } from 'react-router-dom'
 
 const Sales = ({id}) => {
     const detail = useSelector(state => state.roomTour.orderDetail)
-    // console.log(detail)
+    console.log(id)
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMsg, setSnackbarMsg] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('');
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleDelete = () => {
+    if (detail?.status === "pending") {
+      if (window.confirm("Bạn có chắc muốn huỷ đơn hàng này không?")) {
+        dispatch(BookingDelete({ id }));
+        setSnackbarMsg("Huỷ đơn hàng thành công!");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
+        setTimeout(() => {
+            navigate('/User/Settings')
+             dispatch(getListOrder());
+        }, 3000);
+      }
+    } else {
+      setSnackbarMsg("Chỉ có thể huỷ đơn hàng ở trạng thái Pending!");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
+  };
+
     return (
     <Box
         sx={{
@@ -13,24 +42,41 @@ const Sales = ({id}) => {
             pt: 3,
         }}
     >
+        {/* Snackbar */}
+        <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={() => setOpenSnackbar(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+            <Alert 
+            onClose={() => setOpenSnackbar(false)} 
+            severity={snackbarSeverity} 
+            variant='filled'
+            sx={{ width: '100%' }}
+            >
+            {snackbarMsg}
+            </Alert>
+        </Snackbar>
         <Box
             sx={{
             width: '100%',
-            maxWidth: 350,
-            height: 400,
+            maxWidth: 400,
+            height: 440,
             bgcolor: '#fff',
             borderRadius: 3,
             boxShadow: 4,
             overflow: 'hidden',
             display: 'flex',
             gap: 3,
+            pr: 3,
             mt: 1,
             pl: 3,
             marginBottom: 2,
             }}
         >
     
-            <Box sx={{ p: 2 , display: 'flex', flexDirection: 'column', gap: 5}}>
+            <Box sx={{ p: 3 , display: 'flex', flexDirection: 'column', gap: 5}}>
                 <Typography
                     variant="subtitle1"
                     fontWeight="bold"
@@ -59,7 +105,17 @@ const Sales = ({id}) => {
 
                 <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
                     <CardSales id={id}/>
-                    <Button variant='contained' sx={{textTransform: 'none', backgroundColor: 'red'}}>Hủy đơn hàng</Button>
+                    {detail?.status && 
+                        <Button 
+                        variant='contained' 
+                        onClick={handleDelete}
+                        sx={{
+                            textTransform: 'none', 
+                            backgroundColor: 'red'
+                        }}>
+                            Hủy đơn hàng
+                        </Button>
+                    }
                 </Box>
             </Box>
         </Box>

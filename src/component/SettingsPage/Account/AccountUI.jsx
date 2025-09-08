@@ -1,31 +1,32 @@
 import { Box, Button, Divider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dog from '../../../assets/cho.jpg'
-import { postEditUser } from '../../../Redux/ReduxAuth/Slice/editUserSlice';
+import dog from '../../../assets/cho.jpg';
+import { getDetailUser, postEditUser } from '../../../Redux/ReduxAuth/Slice/editUserSlice';
 
 const AccountUI = () => {
   const userDetail = useSelector((state) => state.editUser.userDetail);
-  console.log(userDetail)
+  const id = useSelector((state) => state.editUser.userDetail.id);
+  console.log(id)
   const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [imageData, setImageData] = useState(null);
+  const [imageFile, setImageFile] = useState([]);  
 
   const [nameError, setNameError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [addressError, setAddressError] = useState('');
   const [submitMessage, setSubmitMessage] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(null);
+
   useEffect(() => {
     if (userDetail?.display_name) setName(userDetail.display_name);
     if (userDetail?.email) setEmail(userDetail.email);
     if (userDetail?.phone_number) setPhoneNumber(userDetail.phone_number);
     if (userDetail?.detail_address) setAddress(userDetail.detail_address);
-    if (userDetail?.avatar) setImageData(userDetail.avatar);
   }, [userDetail]);
 
   const validate = () => {
@@ -58,34 +59,52 @@ const AccountUI = () => {
     return isValid;
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validate()) return;
+  const handleAvatarChange = (e) => {
+    const file = (e.target.files[0]);
+    console.log(file)
+    setImageFile(file); 
+  };
 
-  try {
-    console.log('file',imageData)
-    dispatch(postEditUser({
-      id: userDetail?.id,
-      data:{
-        display_name: name,
-        phone_number: phoneNumber,
-        detail_address: address,
-        image_delete: false,
-        image_data: imageData
-      }
-    })).unwrap();
+  const handlePreviewImage = () => {
+    //src={imageFile instanceof File ? URL.createObjectURL(imageFile) : userDetail?.avatar}
+    if(imageFile instanceof File){
+      return URL.createObjectURL(imageFile)
+    }
 
-    setSubmitSuccess(true);
-    setSubmitMessage('Cập nhật thông tin thành công!');
-  } catch (error) {
-    setSubmitSuccess(false);
-    setSubmitMessage('Có lỗi xảy ra, vui lòng thử lại!');
-    setTimeout(() => {
-      setSubmitMessage(''); 
-      setSubmitSuccess(null); 
-    }, 5000);
+    return userDetail?.avatar ? userDetail?.avatar : dog
   }
-};
+
+  // submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    try {
+      dispatch(postEditUser({
+          id: userDetail?.id,
+          data: {
+            display_name: name,
+            phone_number: phoneNumber,
+            detail_address: address,
+            image_delete: imageFile ? true : false,
+            image_data: imageFile, 
+          },
+        })
+      ).unwrap();
+
+      dispatch(getDetailUser(id));
+      setSubmitSuccess(true);
+      setSubmitMessage('Cập nhật thông tin thành công!');
+    } catch (error) {
+      console.error(error);
+      setSubmitSuccess(false);
+      setSubmitMessage('Có lỗi xảy ra, vui lòng thử lại!');
+      setTimeout(() => {
+        setSubmitMessage('');
+        setSubmitSuccess(null);
+      }, 5000);
+    }
+  };
 
   return (
     <Box sx={{ bgcolor: '#f5f5f5', width: '100%', minHeight: '100vh' }}>
@@ -118,8 +137,8 @@ const AccountUI = () => {
                     {/* Cột 1 */}
                     <Box sx={{ flex: 1, minWidth: '250px' }}>
                       <Box>
-                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                          <Typography sx={{color: 'red'}}>*</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography sx={{ color: 'red' }}>*</Typography>
                           <Typography>Tài khoản</Typography>
                         </Box>
                         <input
@@ -137,12 +156,16 @@ const AccountUI = () => {
                             fontSize: '17px',
                           }}
                         />
-                        {nameError && <Typography color="error" fontSize="14px" ml={1}>{nameError}</Typography>}
+                        {nameError && (
+                          <Typography color="error" fontSize="14px" ml={1}>
+                            {nameError}
+                          </Typography>
+                        )}
                       </Box>
 
                       <Box mt={4}>
-                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                          <Typography sx={{color: 'red'}}>*</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography sx={{ color: 'red' }}>*</Typography>
                           <Typography>Số điện thoại</Typography>
                         </Box>
                         <input
@@ -160,7 +183,11 @@ const AccountUI = () => {
                             fontSize: '17px',
                           }}
                         />
-                        {phoneError && <Typography color="error" fontSize="14px" ml={1}>{phoneError}</Typography>}
+                        {phoneError && (
+                          <Typography color="error" fontSize="14px" ml={1}>
+                            {phoneError}
+                          </Typography>
+                        )}
                       </Box>
                     </Box>
 
@@ -187,8 +214,8 @@ const AccountUI = () => {
                       </Box>
 
                       <Box mt={4}>
-                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                          <Typography sx={{color: 'red'}}>*</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography sx={{ color: 'red' }}>*</Typography>
                           <Typography>Địa chỉ</Typography>
                         </Box>
                         <input
@@ -206,28 +233,32 @@ const AccountUI = () => {
                             fontSize: '17px',
                           }}
                         />
-                        {addressError && <Typography color="error" fontSize="14px" ml={1}>{addressError}</Typography>}
+                        {addressError && (
+                          <Typography color="error" fontSize="14px" ml={1}>
+                            {addressError}
+                          </Typography>
+                        )}
                       </Box>
                     </Box>
 
                     {/* Cột 3 */}
                     <Box
                       sx={{
-                        maxWidth: '250px',
-                        height: '260px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: 2,
                         flexDirection: 'column',
-                        pr: 2
+                        pr: 2,
                       }}
                     >
-                      <img
-                        src={
-                          imageData instanceof File
-                            ? URL.createObjectURL(imageData) 
-                            :  imageData || dog
-                        }
+                      <Box
+                      sx={{
+                        width: '250px',
+                        height: '250px',
+                      }}
+                      >
+                        <img
+                        src={handlePreviewImage()}
                         alt="Avatar"
                         style={{
                           width: '100%',
@@ -236,21 +267,16 @@ const AccountUI = () => {
                           objectFit: 'cover',
                         }}
                       />
+                      </Box>
 
-                      {/* Input file ẩn */}
                       <input
                         type="file"
                         accept="image/*"
                         id="avatar-upload"
                         style={{ display: 'none' }}
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setImageData(e.target.files[0]); 
-                          }
-                        }}
+                        onChange={handleAvatarChange}
                       />
 
-                      {/* Nút chọn ảnh */}
                       <label htmlFor="avatar-upload">
                         <Button
                           component="span"
@@ -262,7 +288,6 @@ const AccountUI = () => {
                         </Button>
                       </label>
                     </Box>
-
                   </Box>
 
                   {/* Nút */}
@@ -276,7 +301,6 @@ const AccountUI = () => {
                         ml: 0.5,
                         textTransform: 'none',
                       }}
-                      onClick={handleSubmit}
                     >
                       Chỉnh sửa thông tin
                     </Button>
@@ -287,7 +311,7 @@ const AccountUI = () => {
                           mt: 2,
                           ml: 1,
                           color: submitSuccess ? 'green' : 'red',
-                          fontSize: '17px'
+                          fontSize: '17px',
                         }}
                       >
                         {submitMessage}

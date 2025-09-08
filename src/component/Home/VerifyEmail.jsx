@@ -1,18 +1,36 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { verifyCode } from '../../Redux/ReduxAuth/Slice/authSlice'
+import { useNavigate } from 'react-router-dom'
 
-const VerifyEmail = ({ openDialog, handleCloseDialog }) => {
-    const [email, setEmail] = useState('')
+const VerifyEmail = ({ openDialog, handleCloseDialog, email }) => {
+
+
+    const [code, setCode] = useState('')
     
     const dispatch = useDispatch();
-    const { verifyStatus, verifyError } = useSelector(state => state.auth)
+    const navigate = useNavigate();
+
+    const { verifyStatus, verifyError, VerifyEmail } = useSelector(state => state.auth)
 
     const handleVerify = (e) => {
         e.preventDefault();
-        dispatch(verifyCode({ email: email, code: '123123' }))
+        dispatch(verifyCode({ email, code: code }))
     }
+
+    useEffect(() => {
+        if (verifyStatus == 'succeeded'){
+            setTimeout(() => {
+                navigate('/Login')
+                VerifyEmail()
+                verifyStatus('')
+            }, 2000);
+        }
+    }, [verifyStatus, navigate, VerifyEmail])
+
+    console.log(verifyStatus)
+
   return (
     <Box>
         <Dialog 
@@ -32,10 +50,10 @@ const VerifyEmail = ({ openDialog, handleCloseDialog }) => {
             <DialogContent>
                 <form onSubmit={handleVerify}>
                     <input 
-                        type="text" 
-                        name='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="number" 
+                        name='code'
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
                         style={{
                             display: 'block', 
                             margin: '0 auto',

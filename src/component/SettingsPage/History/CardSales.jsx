@@ -27,10 +27,9 @@ export default function CardSales({id}) {
 
     const dispatch = useDispatch();
 
-    console.log('id ==>', id)
+    // console.log('id ==>', id)
 
     const check = useSelector(state => state.roomTour.listOrders)
-    console.log(check)
 
     const statusCheck = () => {
         const foundOrder = check.find(order => order.id == id);

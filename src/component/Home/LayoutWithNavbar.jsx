@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../../Redux/ReduxAuth/Slice/authSlice';
 import DrawerForSettings from './Drawer/DrawerForSettings';
 import dog from '../../assets/cho.jpg'
+import { getDetailUser } from '../../Redux/ReduxAuth/Slice/editUserSlice';
 
 const drawerWidth = 270;
 
@@ -27,7 +28,13 @@ const LayoutWithNavbar = ({ children }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
+  const id = useSelector((state) => state.auth.user.id);
+  const detail = useSelector((state) => state.editUser.userDetail)
+  // console.log(show)
+
+  useEffect(() => {
+    dispatch(getDetailUser(id))
+  }, [dispatch, id])
 
   const toggleDrawer = () => {
     setDrawerOpen((prev) => !prev);
@@ -75,9 +82,9 @@ const LayoutWithNavbar = ({ children }) => {
         </IconButton>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {user?.avatar ? (
+          {detail?.avatar ? (
               <img
-                src={user?.avatar}
+                src={detail?.avatar}
                 alt="avatar"
                 style={{ width: 32, height: 32, borderRadius: '50%' }}
               />
@@ -93,7 +100,7 @@ const LayoutWithNavbar = ({ children }) => {
             onClick={handleMenuToggle}
             sx={{ cursor: 'pointer', userSelect: 'none', color: 'black' }}
           >
-            {user?.display_name || 'User'}
+            {detail?.display_name || 'User'}
           </Typography>
           <ArrowDropDownIcon
             onClick={handleMenuToggle}

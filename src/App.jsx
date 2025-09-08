@@ -19,6 +19,16 @@ import History from './component/SettingsPage/History/History'
 import Account from './component/SettingsPage/Account/Account'
 import ChangePassword from './component/SettingsPage/ChangePassword/ChangePassword'
 import HistoryDetail from './component/SettingsPage/History/HistoryDetail'
+import AdminHome from './component/Admin/DashBoardAdmin/AdminHome'
+import ShareAdmin from './component/ChangePage/ShareAdmin'
+import LoginAdmin from './component/Admin/LoginAdmin'
+import Unauthorized from './Unauthorized'
+import Customer from './component/Admin/ManageUsers/Customer/Customer'
+import Staff from './component/Admin/ManageUsers/Staff/Staff'
+import ManageTour from './component/Admin/ManageTour/ManageTour'
+import CancelRequest from './component/Admin/CancelRequest/CancelRequest'
+import Category from './component/Admin/Category/Category'
+import ManageOrders from './component/Admin/ManageOrders/ManageOrders'
 
 
 function App() {
@@ -36,10 +46,12 @@ function App() {
         </Route>  
         <Route path='/Login' element={<Login />}/>
         <Route path='/Register' element={<Register />}/>
+        <Route path='/LoginAdmin' element={<LoginAdmin />}/>
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route
           path="/User"
           element={
-            <ProtectRoutes>
+            <ProtectRoutes allowedRoles={'user'}>
               <ShareLayout />
             </ProtectRoutes>
           }
@@ -55,7 +67,7 @@ function App() {
         <Route
           path="User/Settings"
           element={
-            <ProtectRoutes>
+            <ProtectRoutes allowedRoles={'user'}>
               <ShareSettings />
             </ProtectRoutes>
           }
@@ -65,6 +77,23 @@ function App() {
           <Route path='History/:id' element={<HistoryDetail />} />
           <Route path="Account" element={<Account />} />
           <Route path="ChangePassword" element={<ChangePassword />} />
+        </Route>
+
+        <Route
+          path='/Admin'
+          element={
+            <ProtectRoutes allowedRoles={'admin'}>
+              <ShareAdmin />
+            </ProtectRoutes>
+        }
+        >
+          <Route index element={<AdminHome />} />
+          <Route path="Customer" element={<Customer />} />
+          <Route path='Staff' element={<Staff />} />
+          <Route path="Category" element={<Category />} />
+          <Route path="ManageTour" element={<ManageTour />} />
+          <Route path="CancelRequest" element={<CancelRequest />} />
+          <Route path="ManageOrders" element={<ManageOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>

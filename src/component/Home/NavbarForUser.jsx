@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TravelLogo from '../../assets/TravelLogo.jpg';
 import '../../AllCss/Navbar.css';
@@ -13,6 +13,7 @@ import {
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../Redux/ReduxAuth/Slice/authSlice';
+import { getDetailUser } from '../../Redux/ReduxAuth/Slice/editUserSlice';
 
 const NavbarForUser = () => {
   const [open, setOpen] = useState(false);
@@ -20,8 +21,12 @@ const NavbarForUser = () => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
 
-  const user = useSelector(state => state.auth.user)
-  console.log(user)
+  const id = useSelector(state => state.auth.user.id)
+  const user = useSelector((state) => state.editUser.userDetail)
+
+  useEffect(() => {
+    dispatch(getDetailUser(id))
+  }, [dispatch, id])
 
   const navigate = useNavigate();
 

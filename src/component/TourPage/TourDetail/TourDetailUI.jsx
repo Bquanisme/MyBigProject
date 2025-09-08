@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -27,6 +27,8 @@ import StarIcon from '@mui/icons-material/Star';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBookingOrder } from '../../../Redux/ReduxAuth/Slice/roomTourSlice';
+import { getShowReview, postCreateReview } from '../../../Redux/ReduxAuth/Slice/reviewSlice';
+import dog from '../../../assets/cho.jpg'
 
 
 const TourDetailUI = ({ tour }) => {
@@ -47,7 +49,13 @@ const TourDetailUI = ({ tour }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getShowReview(id))
+  }, [dispatch, id])
   
+  // const 
+
   const user = useSelector(state => state.auth.user)
   console.log(user)
 
@@ -116,24 +124,33 @@ const TourDetailUI = ({ tour }) => {
 
   const handleUpload = (event) => {
     const files = Array.from(event.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setUploadedImages(prev => [...prev, ...imageUrls]);
+    console.log('===>',files)
+    setUploadedImages(prev => [...prev, ...files]);
   };
 
   const [reviewContent, setReviewContent] = React.useState('');
-  const [submittedReviews, setSubmittedReviews] = React.useState([]);
 
-  const handleSubmitReview = () => {
-    setSubmittedReviews(prev => [
-      ...prev,
-      { rating: value, content: reviewContent, images: uploadedImages }
-    ]);
+  useEffect(() => {
+    dispatch(getShowReview(id))
+    // console.log(id)
+  }, [dispatch, id])
 
-    setValue(0);
-    setReviewContent('');
-    setUploadedImages([]);
-    handleCloseforX();
+  const showAllReview = useSelector(state => state.review.showReview)
+  console.log(showAllReview)
+
+  const handleSubmitReview = async () => {
+    await dispatch(postCreateReview({
+      user_id: idUser,
+      room_id: id,
+      rate: value,
+      content: reviewContent,
+      images: uploadedImages
+    }))
+    dispatch(getShowReview(id))
+    setOpen(false)
   };
+
+  // console.log('room_id:',id, 'user_id:',idUser, 'rate:',value, 'content: ',reviewContent, 'img:',uploadedImages)
 
     const Transition = React.forwardRef(function Transition(props, ref) {
         return <Slide direction="up" ref={ref} {...props} />;
@@ -300,7 +317,8 @@ const TourDetailUI = ({ tour }) => {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Typography display='flex'>
+          <form onSubmit={handleSubmitReview}>
+          <Typography sx={{display: 'flex', gap: 1}}>
             <Typography>
               Chất lượng:
             </Typography>
@@ -321,22 +339,25 @@ const TourDetailUI = ({ tour }) => {
               <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
             )}
           </Typography><br /><br />
-          <Typography gutterBottom>
+          <Typography sx={{display : 'flex', flexDirection: 'column'}}>
             Nội dung
-            <form >
-              <textarea 
-                value={reviewContent}
-                onChange={(e) => setReviewContent(e.target.value)}
-                style={{width: '100%', height: '80px', marginTop: '10px'}} 
-              />
-            </form>
+            <textarea 
+              value={reviewContent}
+              onChange={(e) => setReviewContent(e.target.value)}
+              style={{width: '100%', height: '80px', marginTop: '10px', fontSize: 15, padding: 5}} 
+            />
           </Typography><br /><br />
           <Typography gutterBottom>
             Hình ảnh
             <Typography style={{ marginTop: '10px'}}>
               <Box mt={2} display="flex" gap={1}>
               {uploadedImages.map((src, index) => (
-                <img key={index} src={src} alt="" style={{ width: 110, height: 100, objectFit: 'cover' }} />
+                <img 
+                  key={index} 
+                  src={URL.createObjectURL(src)} 
+                  alt="" 
+                  style={{ width: 110, height: 100, objectFit: 'cover' }} 
+                />
               ))}
               </Box>
             </Typography><br />
@@ -353,6 +374,7 @@ const TourDetailUI = ({ tour }) => {
               />
             </Button>
           </Typography>
+          </form>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" size='small' style={{color: 'black', border: 'solid 1px lightgray'}} onClick={handleCloseforDelete}>
@@ -481,21 +503,40 @@ const TourDetailUI = ({ tour }) => {
                 borderRadius: 2,
                 p: 2,
                 maxWidth: 600,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
               }}
             >
-              {submittedReviews.length === 0 ? (
+              {showAllReview.length === 0 ? (
                 <Typography fontSize={14}>Chưa có đánh giá nào.</Typography>
               ) : (
-                submittedReviews.map((review, index) => (
-                  <Box key={index} mb={2} sx={{display: 'flex', gap: 2}}>
-                    <img src={user.user.avatar} alt="user" className="user" />
-                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                      <Typography fontSize={14} fontWeight='bold'>{user.user.display_name}</Typography>
-                      <Rating value={review.rating} readOnly size="small" />
+                showAllReview.map((review, index) => (
+                  <Box key={index} mb={2} sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{maxWidth: 40, maxHeight: 40}}>
+                      <img 
+                        src={review?.user?.avatar || dog} 
+                        alt="user" 
+                        className="user" 
+                        style={{ width: 40, height: 40, borderRadius: '50%' }} 
+                      />
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Typography fontSize={14} fontWeight="bold">
+                        {review?.user?.display_name || 'NaN'}
+                      </Typography>
+                      <Rating value={review.rate} readOnly size="small" />
                       <Typography fontSize={14} mt={1}>{review.content}</Typography>
+
                       <Box mt={1} display="flex" gap={1}>
-                        {review.images.map((img, i) => (
-                          <img key={i} src={img} alt="" style={{ width: 110, height: 80, objectFit: 'cover' }} />
+                        {(review.image).map((img, i) => (
+                          <img
+                            key={i}
+                            src={img?.image_data || dog}
+                            alt=""
+                            style={{ width: 110, height: 80, objectFit: "cover" }}
+                          />
                         ))}
                       </Box>
                     </Box>

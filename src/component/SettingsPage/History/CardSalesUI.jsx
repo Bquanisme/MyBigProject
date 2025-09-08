@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import QRCode from '../../../assets/QRPayment.jpg'
 import CloseIcon from '@mui/icons-material/Close';
-import { useSelector } from 'react-redux';
 
 export const CardSalesUI = ({close}) => {
     return (

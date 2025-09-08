@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { register, resetStatus } from '../../Redux/ReduxAuth/Slice/authSlice';
+import { register, resetStatus, resetVerifyState } from '../../Redux/ReduxAuth/Slice/authSlice';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from '@mui/material'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -37,10 +37,13 @@ const Register = () => {
         setTimeout(() => {
             dispatch(resetStatus()); 
             setOpenDialog(true)
-            // navigate('/Login', { state: { success: true } });
         }, 1500);
         }
     }, [auth.status, dispatch, navigate]);
+
+    useEffect(() => {
+      dispatch(resetVerifyState());
+    }, [dispatch]);
 
       const handleSubmit = () => {
         dispatch(register({
@@ -70,7 +73,6 @@ const Register = () => {
                   <Card 
                   sx={{ 
                       width: 650, 
-                      height: 870, 
                   }}
                   >
                       <CardContent>
@@ -268,6 +270,7 @@ const Register = () => {
                   </Card>
             </Box>
             <VerifyEmail 
+                email={email}
                 openDialog={openDialog}
                 handleCloseDialog={handleClose}
             />
